@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>J&BWgenerator</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&family=Playfair+Display&family=Roboto+Slab&family=Lora&family=Raleway&family=Merriweather&family=PT+Serif&family=Open+Sans&family=Montserrat&family=Libre+Baskerville&family=Cinzel&display=swap">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="styles.css">
+
+<!-- html2canvas -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<!-- Full-page background -->
+<style>
+  body {
+    background: url('weddingbackground.png') center center / cover no-repeat fixed;
+    font-family: 'Open Sans', sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- Back to main.html link -->
+    <div style="margin-bottom:16px;">
+      <a href="main.html" class="btn small" style="width:100%; text-align:center;">← Back to Main Page</a>
+    </div>
+
+    <div class="logo">
+      <div class="mark">JI</div>
+      <div>
+        <div style="font-weight:700">InviteBuilder</div>
+        <div style="font-size:12px;color:var(--muted)">Luxury wedding invitation generator</div>
+      </div>
+    </div>
+
+    <h2>Choose Template</h2>
+    <div class="templates">
+      <div class="template-thumb selected" data-tpl="classic">Classic Elegance</div>
+      <div class="template-thumb" data-tpl="floral">Romantic Florals</div>
+      <div class="template-thumb" data-tpl="modern">Modern Chic</div>
+      <div class="template-thumb" data-tpl="golden">Golden Opulence</div>
+      <div class="template-thumb" data-tpl="boho">Boho Garden</div>
+      <div class="template-thumb" data-tpl="lace">Vintage Lace</div>
+      <div class="template-thumb" data-tpl="scroll">Royal Scroll</div>
+      <div class="template-thumb" data-tpl="celestial">Celestial</div>
+      <div class="template-thumb" data-tpl="minimal">Minimal Luxe</div>
+    </div>
+
+    <h2>Text Options</h2>
+    <label for="fontSelect">Font</label>
+    <select id="fontSelect">
+      <option value="'Great Vibes', cursive">Great Vibes</option>
+      <option value="'Dancing Script', cursive">Dancing Script</option>
+      <option value="'Playfair Display', serif">Playfair Display</option>
+      <option value="'Roboto Slab', serif">Roboto Slab</option>
+      <option value="'Lora', serif">Lora</option>
+      <option value="'Raleway', sans-serif">Raleway</option>
+      <option value="'Merriweather', serif">Merriweather</option>
+      <option value="'PT Serif', serif">PT Serif</option>
+      <option value="'Open Sans', sans-serif">Open Sans</option>
+      <option value="'Montserrat', sans-serif">Montserrat</option>
+      <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+      <option value="'Cinzel', serif">Cinzel</option>
+    </select>
+    <label><input type="checkbox" id="boldToggle"> Bold Text</label>
+    <label for="textColor">Text Color</label>
+    <input type="color" id="textColor" value="#222222">
+
+    <h2>Event Details</h2>
+    <input id="bride" type="text" placeholder="Your Name" value="Jane Doe">
+    <input id="groom" type="text" placeholder="Partner's Name" value="John Smith">
+    <input id="heading" type="text" placeholder="Heading" value="You're Invited">
+    <input id="date" type="text" placeholder="Date & Time" value="May 20, 2026 • 4:00 PM">
+    <input id="venue" type="text" placeholder="Venue" value="St. Mary's Church">
+    <input id="address" type="text" placeholder="Address" value="123 Garden Lane, City">
+    <input id="rsvp" type="text" placeholder="RSVP Details" value="RSVP by May 1 • (555) 123-4567">
+
+    <div class="actions">
+      <button id="download" class="btn small">Download PNG</button>
+    </div>
+  </aside>
+
+  <!-- Preview Panel -->
+  <main class="preview-panel">
+    <div class="preview-area">
+      <div id="cardWrapper" class="card-frame tpl-classic medium">
+        <div class="card" id="card">
+          <div class="decor top-left"></div>
+          <div class="decor top-right"></div>
+          <div class="title" id="headingText">You're Invited</div>
+          <div class="divider"></div>
+          <div class="meta" id="inviteLine">Join us as we celebrate the union of</div>
+          <div class="names" id="namesText">Jane Doe & John Smith</div>
+          <div class="divider"></div>
+          <div class="meta" id="dateText">May 20, 2026 • 4:00 PM</div>
+          <div class="meta" id="venueText">St. Mary's Church — 123 Garden Lane</div>
+          <div class="footer-small" id="rsvpText">RSVP by May 1 • (555) 123-4567</div>
+          <div class="decor bottom-left"></div>
+          <div class="decor bottom-right"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+// DOM references
+const tplThumbs = document.querySelectorAll('.template-thumb');
+const cardWrapper = document.getElementById('cardWrapper');
+const card = document.getElementById('card');
+const cardTextElements = [
+  document.getElementById('headingText'),
+  document.getElementById('inviteLine'),
+  document.getElementById('namesText'),
+  document.getElementById('dateText'),
+  document.getElementById('venueText'),
+  document.getElementById('rsvpText')
+];
+const inputs = {
+  bride: document.getElementById('bride'),
+  groom: document.getElementById('groom'),
+  heading: document.getElementById('heading'),
+  date: document.getElementById('date'),
+  venue: document.getElementById('venue'),
+  address: document.getElementById('address'),
+  rsvp: document.getElementById('rsvp')
+};
+
+// Update preview
+function escapeHtml(unsafe){ return unsafe.replace(/[&<"'>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function updatePreview(){
+  const b = inputs.bride.value || '[Your name]';
+  const g = inputs.groom.value || '[Partner]';
+  document.getElementById('headingText').textContent = inputs.heading.value || "You're Invited";
+  document.getElementById('inviteLine').textContent = "Join us as we celebrate the union of";
+  document.getElementById('namesText').innerHTML = `${escapeHtml(b)} & <span style="opacity:.9"> &amp; </span> ${escapeHtml(g)}`;
+  document.getElementById('dateText').textContent = inputs.date.value || 'Date • Time';
+  document.getElementById('venueText').textContent = (inputs.venue.value || '') + (inputs.address.value ? ' — ' + inputs.address.value : '');
+  document.getElementById('rsvpText').textContent = inputs.rsvp.value || '';
+}
+Object.values(inputs).forEach(inp => inp.addEventListener('input', updatePreview));
+
+// Template selection
+tplThumbs.forEach(thumb=>{
+  thumb.addEventListener('click', ()=>{
+    tplThumbs.forEach(t=>t.classList.remove('selected'));
+    thumb.classList.add('selected');
+    cardWrapper.className = 'card-frame tpl-' + thumb.dataset.tpl + ' medium';
+  });
+});
+
+// Font selection
+document.getElementById('fontSelect').addEventListener('change', e=>{
+  cardTextElements.forEach(el=>el.style.fontFamily=e.target.value);
+});
+
+// Bold toggle
+document.getElementById('boldToggle').addEventListener('change', e=>{
+  cardTextElements.forEach(el=>el.style.fontWeight=e.target.checked ? '700':'400');
+});
+
+// Text color
+document.getElementById('textColor').addEventListener('input', e=>{
+  cardTextElements.forEach(el=>el.style.color=e.target.value);
+});
+
+// Download PNG
+document.getElementById('download').addEventListener('click', async ()=>{
+  try{
+    const canvas = await html2canvas(cardWrapper,{scale:2,useCORS:true,backgroundColor:null});
+    const link=document.createElement('a');
+    link.download='wedding-invite.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+  }catch(e){alert('Error generating image'); console.error(e);}
+});
+
+updatePreview();
+</script>
+</body>
+</html>
